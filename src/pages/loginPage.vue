@@ -12,36 +12,60 @@
       </div>
       <button type="submit">Login</button>
     </form>
+    <h3>Sign in using google Account</h3>
+    <GoogleLogin @success="onGoogleAuthSuccess" :callback="callback" prompt />
   </div>
 </template>
 
 <script>
+import { decodeCredential } from "vue3-google-login";
+import router from "@/router";
 import axios from "axios";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 export default {
   data() {
     return {
       username: "",
       password: "",
+      callback: (response) => {
+        const user = decodeCredential(response.credential);
+        console.log(user);
+      },
     };
   },
   methods: {
     async login() {
       try {
-        console.log("inside login");
+        // console.log("inside login");
         let data = {
           email: this.username,
           password: this.password,
         };
-        const loginData = await axios.post(
-          "http://localhost:3000/login",
-          data
-        );
-        console.log(loginData.data);
-        console.log("inside login");
+        const loginData = await axios.post("http://localhost:3000/login", data);
+        // console.log(loginData.data.success);
+        if (loginData.data.success) {
+          console.log("login", loginData);
+          localStorage.setItem("token", loginData.data.token);
+          localStorage.setItem("email", loginData.data.email);
+          localStorage.setItem("loggedIn", "true");
+          await router.push("/");
+          toast.success("Successfully Logged in:)", { autoclose: 5000 });
+          console.log(loginData.data);
+        }
       } catch (error) {
+        toast.error("Wrong Id or Password", { autoclose: 5000 });
+
         console.log(error);
       }
-      console.log("inside login 1");
+    },
+    onGoogleAuthSuccess(response) {
+      // You can access the access token from the response object
+      const accessToken = response.accessToken;
+      console.log();
+      console.log(accessToken);
+      // Now you have the access token and can send it to your backend or use it as needed.
+      // this.sendAccessTokenToBackend(accessToken);
     },
   },
 };
