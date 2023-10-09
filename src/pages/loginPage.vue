@@ -13,7 +13,7 @@
       <button type="submit">Login</button>
     </form>
     <h3>Sign in using google Account</h3>
-    <GoogleLogin @success="onGoogleAuthSuccess" :callback="callback" prompt />
+    <GoogleLogin :callback="handleGoogleLogin" prompt />
   </div>
 </template>
 
@@ -28,13 +28,47 @@ export default {
     return {
       username: "",
       password: "",
-      callback: (response) => {
-        const user = decodeCredential(response.credential);
-        console.log(user);
-      },
+      gmail: "",
     };
   },
   methods: {
+    async handleGoogleLogin(response) {
+      // Decode the Google login credential to access the access token
+      const user = decodeCredential(response.credential);
+
+      const accessToken = response.credential;
+      const clientId = response.clientId;
+      // console.log(response)
+      console.log(user);
+      console.log("Google Access Token:", accessToken);
+
+      const data = {
+        email: user.email,
+        accessToken: accessToken,
+        clientId: clientId,
+      };
+      try {
+        const loginData = await axios.post(
+          "http://localhost:3000/google-login",
+          {
+            data,
+          }
+        );
+
+        if (loginData.data.success) {
+          localStorage.setItem("token", loginData.data.token);
+          localStorage.setItem("email", loginData.data.email);
+          localStorage.setItem("loggedIn", "true");
+          await router.push("/");
+          toast.success("Successfully Logged in:)", { autoclose: 5000 });
+          console.log(loginData.data);
+        }
+      } catch (error) {
+        toast.error("Google Login Failed", { autoclose: 5000 });
+        console.error(error);
+      }
+    },
+
     async login() {
       try {
         // console.log("inside login");
@@ -58,14 +92,6 @@ export default {
 
         console.log(error);
       }
-    },
-    onGoogleAuthSuccess(response) {
-      // You can access the access token from the response object
-      const accessToken = response.accessToken;
-      console.log();
-      console.log(accessToken);
-      // Now you have the access token and can send it to your backend or use it as needed.
-      // this.sendAccessTokenToBackend(accessToken);
     },
   },
 };
