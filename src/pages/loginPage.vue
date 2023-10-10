@@ -39,8 +39,9 @@ export default {
       const accessToken = response.credential;
       const clientId = response.clientId;
       // console.log(response)
-      console.log(user);
-      console.log("Google Access Token:", accessToken);
+      // console.log(user);
+      // console.log("Google Access Token:", accessToken);
+      // console.log("client id:", clientId)
 
       const data = {
         email: user.email,
@@ -54,14 +55,14 @@ export default {
             data,
           }
         );
-
+        // console.log(loginData);
         if (loginData.data.success) {
           localStorage.setItem("token", loginData.data.token);
           localStorage.setItem("email", loginData.data.email);
           localStorage.setItem("loggedIn", "true");
           await router.push("/");
           toast.success("Successfully Logged in:)", { autoclose: 5000 });
-          console.log(loginData.data);
+          // console.log(loginData.data);
         }
       } catch (error) {
         toast.error("Google Login Failed", { autoclose: 5000 });
