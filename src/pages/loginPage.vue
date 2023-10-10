@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <h2>Login</h2>
-    <form @submit.prevent="login">
+  <div class="login-container">
+    <h2>Sign In</h2>
+    <form @submit.prevent="login" class="login-form">
       <div class="form-group">
         <label for="username">Username:</label>
         <input type="text" id="username" v-model="username" required />
@@ -10,10 +10,12 @@
         <label for="password">Password:</label>
         <input type="password" id="password" v-model="password" required />
       </div>
-      <button type="submit">Login</button>
+      <div class="btnlogin">
+        <button type="submit" class="login-button">Login</button>
+      </div>
     </form>
-    <h3>Sign in using google Account</h3>
-    <GoogleLogin :callback="handleGoogleLogin" prompt />
+    <h3>Sign in using Google Account</h3>
+    <GoogleLogin :callback="handleGoogleLogin" class="google-login" />
   </div>
 </template>
 
@@ -33,13 +35,12 @@ export default {
   },
   methods: {
     async handleGoogleLogin(response) {
-      // Decode the Google login credential to access the access token
       const user = decodeCredential(response.credential);
-
       const accessToken = response.credential;
       const clientId = response.clientId;
       // console.log(response)
       // console.log(user);
+
       // console.log("Google Access Token:", accessToken);
       // console.log("client id:", clientId)
 
@@ -99,14 +100,26 @@ export default {
 </script>
 
 <style scoped>
-/* Add your CSS styling for the login form here */
-h2 {
-  text-align: center;
+.login-container {
+  margin-top: 50px;
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
-form {
-  max-width: 300px;
-  margin: 0 auto;
+h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  margin-bottom: 20px;
 }
 
 .form-group {
@@ -123,20 +136,31 @@ input[type="password"] {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 3px;
 }
-
-button {
-  width: 100%;
-  padding: 10px;
+.login-button {
   background-color: #007bff;
-  color: white;
+  color: #fff;
+  padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
 }
+.btnlogin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-button:hover {
+button.login-button:hover {
   background-color: #0056b3;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+.google-login {
+  margin-top: 20px;
 }
 </style>

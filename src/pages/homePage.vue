@@ -39,7 +39,7 @@ export default {
       this.tokenExpiry = new Date(decodedToken.exp * 1000);
       const currentTimestamp = Math.floor(Date.now() / 1000);
       this.timeRemaining = this.tokenExpiry - currentTimestamp;
-      // console.log(this.timeRemaining)
+      console.log(this.timeRemaining)
     },
     async autoLogout() {
       if (this.timeRemaining > 0) {
@@ -52,7 +52,7 @@ export default {
   },
   created() { 
     this.tokenTime();
-    this.autoLogout();
+    // this.autoLogout();
   },
   async mounted() {
     try {
