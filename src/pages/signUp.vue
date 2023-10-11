@@ -58,13 +58,24 @@
             type="text"
             class="form-control"
             id="inputAddress"
-            placeholder="1234 Main St"
+            placeholder="Kh Road argusoft ..."
             v-model="address"
+          />
+        </div>
+        <div class="form-group">
+          <label for="inputZip">Zip</label>
+          <input
+            type="text"
+            class="form-control"
+            v-model="zip"
+            id="inputZip"
+            @blur="fetchPincode"
           />
         </div>
         <div class="form-group">
           <label for="inputCity">City</label>
           <input
+          disabled
             type="text"
             v-model="city"
             class="form-control"
@@ -73,17 +84,15 @@
         </div>
         <div class="form-group">
           <label for="inputState">State</label>
-          <select id="inputState" v-model="state" class="form-control">
-            <option value="" selected disabled>Choose...</option>
-            <option v-for="state in indianStates" :key="state">
-              {{ state }}
-            </option>
-          </select>
+          <input
+          disabled
+          type="text"
+          v-model="state"
+          class="form-control"
+          id="inputState"
+        />
         </div>
-        <div class="form-group">
-          <label for="inputZip">Zip</label>
-          <input type="text" class="form-control" v-model="zip" id="inputZip" />
-        </div>
+        
       </div>
       <button type="submit" class="btn btn-primary">Sign Up</button>
     </form>
@@ -99,36 +108,7 @@ import "vue3-toastify/dist/index.css";
 export default {
   data() {
     return {
-      indianStates: [
-        "Andhra Pradesh",
-        "Arunachal Pradesh",
-        "Assam",
-        "Bihar",
-        "Chhattisgarh",
-        "Goa",
-        "Gujarat",
-        "Haryana",
-        "Himachal Pradesh",
-        "Jharkhand",
-        "Karnataka",
-        "Kerala",
-        "Madhya Pradesh",
-        "Maharashtra",
-        "Manipur",
-        "Meghalaya",
-        "Mizoram",
-        "Nagaland",
-        "Odisha",
-        "Punjab",
-        "Rajasthan",
-        "Sikkim",
-        "Tamil Nadu",
-        "Telangana",
-        "Tripura",
-        "Uttar Pradesh",
-        "Uttarakhand",
-        "West Bengal",
-      ],
+      
       name: "",
       email: "",
       password: "",
@@ -140,6 +120,7 @@ export default {
       zip: null,
     };
   },
+ 
   methods: {
     async signUp() {
       try {
@@ -161,7 +142,7 @@ export default {
         if (signUpData.data.success) {
           await router.push("/login");
           toast.success("Successfully Signed Up ", { autoclose: 5000 });
-        }else{
+        } else {
           toast.error(signUpData.data.message);
         }
       } catch (err) {
@@ -169,6 +150,19 @@ export default {
         console.log("hhhh");
         toast.error("Sorry unable to Sign up ", { autoclose: 5000 });
       }
+    },
+    async fetchPincode() {
+      const pincode = this.zip;
+      const response = await axios.get(
+        `https://api.postalpincode.in/pincode/${pincode}`
+      );
+      console.log(response.data[0].PostOffice[0].District);
+      console.log(response.data[0].PostOffice[0].State);
+      this.city = response.data[0].PostOffice[0].District;
+      this.state = response.data[0].PostOffice[0].State;
+      console.log(this.city);
+      console.log(this.state)
+      console.log("output", pincode);
     },
   },
 };
