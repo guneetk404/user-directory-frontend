@@ -39,7 +39,8 @@ export default {
       const accessToken = response.credential;
       const clientId = response.clientId;
       // console.log(response)
-      // console.log(user);
+      console.log(user);
+      const profileURl = user.picture;
 
       // console.log("Google Access Token:", accessToken);
       // console.log("client id:", clientId)
@@ -61,6 +62,8 @@ export default {
           localStorage.setItem("token", loginData.data.token);
           localStorage.setItem("email", loginData.data.email);
           localStorage.setItem("loggedIn", "true");
+          localStorage.setItem("picture",profileURl)
+          
           await router.push("/");
           toast.success("Successfully Logged in:)", { autoclose: 5000 });
           // console.log(loginData.data);

@@ -12,6 +12,12 @@
   </div>
   <edit-dialog
     :email="email"
+    :name="name"
+    :address="address"
+    :city="city"
+    :phone="phone"
+    :zip="zip"
+    :state="state"
     v-if="showEditDialog"
     @changes-saved="closeEditDialog"
   />

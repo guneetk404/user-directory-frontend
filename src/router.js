@@ -5,7 +5,8 @@ import homePage from './pages/homePage.vue'
 import loginPage from "./pages/loginPage.vue";
 import signUp from "./pages/signUp.vue"
 import adminPage from "./pages/adminPage.vue"
-
+import userprofile from "./pages/userProfile.vue"
+import TheNavbar from './components/TheNavbar.vue'
 const routes = [
   {
     path: "/",
@@ -22,7 +23,16 @@ const routes = [
   {
     path:"/admin",
     component:adminPage
+  },
+  {
+    path:'/profile',
+    component:userprofile
+  },
+  {
+    path:'/nav',
+    component:TheNavbar
   }
+
 ];
 
 const router = createRouter({

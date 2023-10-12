@@ -22,8 +22,8 @@ export default {
   methods: {
     logout() {
       console.log(localStorage.getItem("loggedIn"))
-      localStorage.removeItem("loggedIn"); // Remove only the "loggedIn" item
-      this.isLoggedIn = false; // Update the local data property
+      localStorage.clear();
+      this.isLoggedIn = false; 
     },
     autoLogout(){
       const curr =  Date.now()

@@ -1,94 +1,3 @@
-<!-- 
-<template>
-  <h3 class="centered-form">Update your details</h3>
-
-  <div class="container">
-    <form @submit.prevent="signUp" class="centered-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="inputName">Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="inputName"
-            placeholder="Name"
-            v-model="editedName"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="inputEmail">Email</label>
-          <input
-            disabled
-            type="email"
-            class="form-control"
-            id="inputEmail"
-            placeholder="Email"
-            v-model="editedEmail"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="inputPhone">Phone</label>
-          <input
-            type="number"
-            class="form-control"
-            id="inputPhone"
-            placeholder="Contact Number"
-            v-model="editedPhone"
-            required
-          />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="inputAddress">Address</label>
-          <input
-            type="text"
-            class="form-control"
-            id="inputAddress"
-            placeholder="1234 Main St"
-            v-model="editedAddress"
-          />
-        </div>
-        <div class="form-group">
-          <label for="inputCity">City</label>
-          <input
-            type="text"
-            v-model="editedCity"
-            class="form-control"
-            id="inputCity"
-          />
-        </div>
-        <div class="form-group">
-          <label for="inputState">State</label>
-          <select id="inputState" v-model="editedState" class="form-control">
-            <option value="" selected disabled>Choose...</option>
-            <option v-for="state in indianStates" :key="state">
-              {{ state }}
-            </option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="inputZip">Zip</label>
-          <input
-            type="text"
-            class="form-control"
-            v-model="editedZip"
-            id="inputZip"
-          />
-        </div>
-      </div>
-      <button type="submit" @click="saveChanges" class="btn btn-primary">
-        update details
-      </button>
-      <button type="button" @click="cancelChanges" class="btn btn-primary">
-        Cancel
-      </button>
-    </form>
-  </div>
-</template> -->
-
 <template>
   <div class="update-details-form">
     <h3 class="form-title">Update Your Details</h3>
@@ -187,16 +96,16 @@
 import axios from "axios";
 
 export default {
-  props: ["email"],
+  props: ["email","name","address","city","state","phone","zip"],
   data() {
     return {
-      editedName: "",
+      editedName: this.name,
       editedEmail: this.email,
-      editedPhone: "",
-      editedAddress: "",
-      editedCity: "",
-      editedZip: "",
-      editedState: "",
+      editedPhone: this.phone,
+      editedAddress: this.address,
+      editedCity: this.city,
+      editedZip: this.zip,
+      editedState: this.state,
       showEditDialog: true,
     };
   },
