@@ -16,6 +16,15 @@
     </form>
     <h3>Sign in using Google Account</h3>
     <GoogleLogin :callback="handleGoogleLogin" class="google-login" />
+    <div>
+      <span>Not Registered?</span>
+      <router-link to="/signup">Sign Up here</router-link>
+    </div>
+
+    <div>
+      <router-link to="/reset-password">Forget Password</router-link>
+
+    </div>
   </div>
 </template>
 
@@ -62,9 +71,12 @@ export default {
           localStorage.setItem("token", loginData.data.token);
           localStorage.setItem("email", loginData.data.email);
           localStorage.setItem("loggedIn", "true");
-          localStorage.setItem("picture",profileURl)
-          
-          await router.push("/");
+          localStorage.setItem("picture", profileURl);
+          if (loginData.data.admin) {
+            await router.push("/admin");
+          } else {
+            await router.push("/profile");
+          }
           toast.success("Successfully Logged in:)", { autoclose: 5000 });
           // console.log(loginData.data);
         }
@@ -88,7 +100,12 @@ export default {
           localStorage.setItem("token", loginData.data.token);
           localStorage.setItem("email", loginData.data.email);
           localStorage.setItem("loggedIn", "true");
-          await router.push("/");
+          console.log("adminhy",loginData.data.admin);
+          if (loginData.data.admin) {
+            await router.push("/admin");
+          } else {
+            await router.push("/profile");
+          }
           toast.success("Successfully Logged in:)", { autoclose: 5000 });
           console.log(loginData.data);
         }
@@ -165,5 +182,9 @@ h3 {
 
 .google-login {
   margin-top: 20px;
+}
+a {
+  color: black;
+  text-decoration: none;
 }
 </style>

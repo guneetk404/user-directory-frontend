@@ -1,119 +1,113 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="users"
-    :sort-by="[{ key: 'calories', order: 'asc' }]"
-    class="elevation-1"
-  >
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title>All Users</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ props }">
-            <v-btn color="primary" dark class="mb-2" v-bind="props">
-              New Item
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
+  <div class="container" v-if="!edit">
+    <div class="center1">
+      <div class="heading1">All Users</div>
+      <button @click="logout" class="btn btn-primary logout">Logout</button>
+    </div>
 
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="text" @click="close">
-                Cancel
-              </v-btn>
-              <v-btn color="blue-darken-1" variant="text" @click="save">
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5"
-              >Are you sure you want to delete this item?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="text" @click="closeDelete"
-                >Cancel</v-btn
-              >
-              <v-btn
-                color="blue-darken-1"
-                variant="text"
-                @click="deleteItemConfirm"
-                >OK</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon size="small" class="me-2" @click="editItem(item)">
-        mdi-pencil
-      </v-icon>
-      <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
-    </template>
-  </v-data-table>
+    <div class="row">
+      <v-card
+        class="user"
+        width="344"
+        height="140"
+        color="indigo"
+        :variant="variant"
+        v-for="(card, index) in cards"
+        :key="index"
+      >
+        <v-card-item>
+          <div>
+            <div class="text-overline mb-1">Name: {{ card.name }}</div>
+            Email: {{ card.email }}
+          </div>
+        </v-card-item>
+        <div class="view-more-container">
+          <v-card-actions>
+            <v-btn @click="showUserDetails(index)">View And Edit</v-btn>
+            <v-btn @click="deleteUser(index)">Delete</v-btn>
+          </v-card-actions>
+        </div>
+      </v-card>
+    </div>
+  </div>
+  <edit-dialog
+    :email="selectedUser.email"
+    :name="selectedUser.name"
+    :address="selectedUser.address"
+    :city="selectedUser.city"
+    :phone="selectedUser.phone"
+    :zip="selectedUser.zip"
+    :state="selectedUser.state"
+    v-if="edit"
+    @changes-saved="closeEditDialog"
+  />
 </template>
+
 <script>
-import { VDataTable } from "vuetify/labs/VDataTable";
+import router from "@/router";
 import axios from "axios";
+import editDialog from "../components/editDialog";
 
 export default {
-  components: { "v-data-table": VDataTable },
-
-
+  data() {
+    return {
+      cards: [
+        {},
+        // Add more user data objects here
+      ],
+      dialog: false,
+      selectedUser: null,
+      edit: false,
+    };
+  },
+  components: {
+    editDialog,
+  },
+  methods: {
+    showUserDetails(index) {
+      this.selectedUser = this.cards[index];
+      this.dialog = true;
+      this.edit = true;
+    },
+    async deleteUser(index) {
+      this.selectedUser = this.cards[index];
+      // console.log(this.selectedUser)
+      try {
+        const token = localStorage.getItem("token");
+        // console.log(token);
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        const email = this.selectedUser.email;
+        const response = await axios.delete(
+          `http://localhost:3000/delete/${email}`,
+          {
+            headers,
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    closeUserDetails() {
+      this.dialog = false;
+    },
+    closeEditDialog() {
+      this.edit = false;
+    },
+    logout() {
+      console.log(localStorage.getItem("loggedIn"))
+      localStorage.clear();
+      router.push('/login')
+      this.isLoggedIn = false; 
+    },
+  },
   async mounted() {
     try {
-//       const email = localStorage.getItem("email");
+      //       const email = localStorage.getItem("email");
       const token = localStorage.getItem("token");
+      console.log(token);
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -121,128 +115,60 @@ export default {
       const response = await axios.get(`http://localhost:3000/allusers`, {
         headers,
       });
-      this.users = response.data;
-    console.log(response.data[0].name);
+      this.cards = response.data;
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
   },
-
-
-  data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    headers: [
-      {
-        title: "Email",
-        align: "start",
-        sortable: false,
-        key: "name",
-      },
-      { title: "Name", key: "email" },
-      { title: "Phone", key: "phone" },
-      { title: "Actions", key: "actions", sortable: false },
-    ],
-    users: [],
-    editedIndex: -1,
-    editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
-    defaultItem: {
-      name: "",
-      email: "",
-      phone: Number,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
-  }),
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    },
-  },
-
-  watch: {
-    dialog(val) {
-      val || this.close();
-    },
-    dialogDelete(val) {
-      val || this.closeDelete();
-    },
-  },
-
-  created() {
-    this.initialize();
-  },
-
-  methods: {
-    initialize() {
-      this.users = [
-        {
-          email: "guneets@argusoft.com",
-          name: "guneet singh",
-          phone: 6393970007,
-        },
-        {
-          email: "guneetk404@gmial.com",
-          name: "guneet",
-          phone: 6393970007,
-        },
-        {
-          email: "test@gmail.com",
-          name: "test user",
-          phone: 6393977,
-        },
-      ];
-    },
-
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
-      this.closeDelete();
-    },
-
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
-      this.close();
-    },
-  },
 };
 </script>
+
+<style scoped>
+.center1 {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items:center !important;
+  height: 80px !important; /* Adjust the height as needed for vertical centering */
+}
+
+.heading1 {
+  font-size: 24px !important;
+  font-weight: bold !important;
+  margin: 20px 0 !important;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.user {
+  width: calc(33.33% - 20px); /* Adjust the width as needed */
+  margin-bottom: 20px;
+  border-radius: 10px; /* Add rounded corners to cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow to cards */
+  background-color: #f5f5f5; /* Set card background color */
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.user:hover {
+  transform: scale(1.05); /* Add hover effect to cards */
+}
+
+.view-more-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px; /* Adjust the height as needed */
+}
+.v-card-actions .v-btn {
+  margin-bottom: 10px;
+}
+</style>

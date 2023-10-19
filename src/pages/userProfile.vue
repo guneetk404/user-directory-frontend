@@ -1,18 +1,21 @@
 <template>
-  <body>
+  <body v-if="!edit">
     <div class="main-content">
       <!-- Top navbar -->
-      <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+      <nav
+        class="navbar navbar-top navbar-expand-md navbar-dark"
+        id="navbar-main"
+      >
         <div class="container-fluid">
-          
-          
           <form
             class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto"
           >
             <div class="form-group mb-0">
               <div class="input-group input-group-alternative">
                 <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fas fa-search"></i></span>
+                  <span class="input-group-text"
+                    ><i class="fas fa-search"></i
+                  ></span>
                 </div>
                 <input class="form-control" placeholder="Search" type="text" />
               </div>
@@ -20,28 +23,30 @@
           </form>
           <!-- User -->
           <div class="navbar-nav align-items-center d-none d-md-flex">
-            
-                <div class="media align-items-center">
-                  <span class="avatar avatar-sm rounded-circle">
-                    <img
-                      alt="Image placeholder"
-                      :src="pictureUrl"
-                    />
-                  </span>
-                  <div class="media-body ml-2 d-none d-lg-block">
-                    <span class="mb-0 text-sm font-weight-bold"> {{name}}</span>
-                  </div>
-                </div>
+            <div class="media align-items-center">
+              <span class="avatar avatar-sm rounded-circle">
+                <img alt="Image placeholder" :src="pictureUrl" />
+              </span>
+              <div class="media-body ml-2 d-none d-lg-block">
+                <span class="mb-0 text-sm font-weight-bold text">
+                  {{ name }}</span
+                >
+              </div>
+
+              <div class="media-body ml-2 d-none d-lg-block">
+                <button class="text" @click="logout">Logout</button>
+              </div>
+            </div>
           </div>
         </div>
       </nav>
-      
+
       <!-- Header -->
       <div
         class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
         style="
           min-height: 600px;
-          background-image: url(https://raw.githubusercontent.com/creativetimofficial/argon-dashboard/gh-pages/assets-old/img/theme/profile-cover.jpg);
+
           background-size: cover;
           background-position: center top;
         "
@@ -52,12 +57,12 @@
         <div class="container-fluid d-flex align-items-center">
           <div class="row">
             <div class="col-lg-7 col-md-10">
-              <h1 class="display-2 text-white">Hello {{name}}</h1>
+              <h1 class="display-2 text-white">Hello {{ name }}</h1>
               <p class="text-white mt-0 mb-5">
-                This is your profile page. You can see the progress you've made with your
-                work and manage your projects or assigned tasks
+                This is your profile page. You can see the progress you've made
+                with your work and manage your projects or assigned tasks
               </p>
-              <a href="#!" class="btn btn-info" @click="edit">Edit profile</a>
+              <a class="btn btn-info" @click="editToggle">Edit profile</a>
             </div>
           </div>
         </div>
@@ -73,20 +78,31 @@
                     <a href="#">
                       <img
                         :src="pictureUrl"
+                        alt="no image found"
                         class="rounded-circle"
                       />
                     </a>
                   </div>
                 </div>
               </div>
-              <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+              <div
+                class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4"
+              >
                 <div class="d-flex justify-content-between">
-                  <a href="https://in.linkedin.com/" class="btn btn-sm btn-info mr-4">Connect</a>
-                  <a href="https://wa.me/+916393970007" class="btn btn-sm btn-default float-right">Message</a>
+                  <a
+                    href="https://in.linkedin.com/"
+                    class="btn btn-sm btn-info mr-4"
+                    >Connect</a
+                  >
+                  <a
+                    href="https://wa.me/+916393970007"
+                    class="btn btn-sm btn-default float-right"
+                    >Message</a
+                  >
                 </div>
               </div>
               <div class="card-body pt-0 pt-md-4">
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col">
                     <div class="card-profile-stats d-flex justify-content-center mt-md-5">
                       <div>
@@ -103,25 +119,25 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <div class="text-center">
-                  <h3>Jessica Jones<span class="font-weight-light">, 27</span></h3>
+                  <h3>{{ name }}<span class="font-weight-light"></span></h3>
                   <div class="h5 font-weight-300">
-                    <i class="ni location_pin mr-2"></i>Bucharest, Romania
+                    <i class="ni location_pin mr-2"></i>{{ city }}, {{ state }}
                   </div>
                   <div class="h5 mt-4">
-                    <i class="ni business_briefcase-24 mr-2"></i>Solution Manager -
-                    Creative Tim Officer
+                    <i class="ni business_briefcase-24 mr-2"></i>Probationer -
+                    Argusoft
                   </div>
-                  <div>
+                  <!-- <div>
                     <i class="ni education_hat mr-2"></i>University of Computer Science
                   </div>
                   <hr class="my-4" />
                   <p>
                     Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy
                     — writes, performs and records all of his own music.
-                  </p>
-                  <a href="#">Show more</a>
+                  </p> -->
+                  <!-- <a href="#">Show more</a> -->
                 </div>
               </div>
             </div>
@@ -140,16 +156,19 @@
               </div>
               <div class="card-body">
                 <form>
-                  <h6 class="heading-small text-muted mb-4">User information</h6>
+                  <h6 class="heading-small text-muted mb-4">
+                    User information
+                  </h6>
                   <div class="pl-lg-4">
-                    
                     <div class="row">
                       <div class="col-lg-6">
                         <div class="form-group focused">
-                          <label class="form-control-label" for="input-first-name"
+                          <label
+                            class="form-control-label"
+                            for="input-first-name"
                             >First name</label
                           >
-                          
+
                           <div
                             class="form-control form-control-alternative"
                             id="input-first-name"
@@ -160,10 +179,12 @@
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group focused">
-                          <label class="form-control-label" for="input-last-name"
+                          <label
+                            class="form-control-label"
+                            for="input-last-name"
                             >Last name</label
                           >
-                          
+
                           <div
                             class="form-control form-control-alternative"
                             id="input-last-name"
@@ -174,39 +195,41 @@
                       </div>
                     </div>
                     <div class="row">
-                              <div class="col-lg-6">
-                                <div class="form-group focused">
-                                  <label class="form-control-label" for="input-phone"
-                                    >Phone</label
-                                  >
-                            
-                                  <div
-                                    class="form-control form-control-alternative"
-                                    id="input-phone"
-                                  >
-                                    {{ phone }}
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="col-lg-6">
-                                <div class="form-group">
-                                  <label class="form-control-label" for="input-email"
-                                    >Email address</label
-                                  >
-                              
-                                  <div
+                      <div class="col-lg-6">
+                        <div class="form-group focused">
+                          <label class="form-control-label" for="input-phone"
+                            >Phone</label
+                          >
+
+                          <div
+                            class="form-control form-control-alternative"
+                            id="input-phone"
+                          >
+                            {{ phone }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label" for="input-email"
+                            >Email address</label
+                          >
+
+                          <div
                             class="form-control form-control-alternative"
                             id="input-email"
                           >
                             {{ email }}
                           </div>
-                                </div>
-                              </div>
-                            </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <hr class="my-4" />
                   <!-- Address -->
-                  <h6 class="heading-small text-muted mb-4">Contact information</h6>
+                  <h6 class="heading-small text-muted mb-4">
+                    Contact information
+                  </h6>
                   <div class="pl-lg-4">
                     <div class="row">
                       <div class="col-md-12">
@@ -227,7 +250,9 @@
                     <div class="row">
                       <div class="col-lg-4">
                         <div class="form-group focused">
-                          <label class="form-control-label" for="input-city">City</label>
+                          <label class="form-control-label" for="input-city"
+                            >City</label
+                          >
                           <div
                             class="form-control form-control-alternative"
                             id="input-city"
@@ -238,15 +263,15 @@
                       </div>
                       <div class="col-lg-4">
                         <div class="form-group focused">
-                          <label class="form-control-label" for="input-country"
-                            >Country</label
+                          <label class="form-control-label" for="input-state"
+                            >State</label
                           >
 
                           <div
                             class="form-control form-control-alternative"
-                            id="input-country"
+                            id="input-state"
                           >
-                            {{ country }}
+                            {{ state }}
                           </div>
                         </div>
                       </div>
@@ -272,13 +297,13 @@
                   <div class="pl-lg-4">
                     <div class="form-group focused">
                       <label>About Me</label>
-                      <textarea
+                      <div
                         rows="4"
                         class="form-control form-control-alternative"
                         placeholder="A few words about you ..."
                       >
-A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.</textarea
-                      >
+                        Please tell us about you!
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -288,27 +313,24 @@ A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.</textarea
         </div>
       </div>
     </div>
-    <!-- <footer class="footer">
-      <div class="row align-items-center justify-content-xl-between">
-        <div class="col-xl-6 m-auto text-center">
-          <div class="copyright">
-            <p>
-              Made with
-              <a
-                href="https://www.creative-tim.com/product/argon-dashboard"
-                target="_blank"
-                >Argon Dashboard</a
-              >
-              by Creative Tim
-            </p>
-          </div>
-        </div>
-      </div>
-    </footer> -->
   </body>
+  <edit-dialog
+    :email="email"
+    :name="name"
+    :address="address"
+    :city="city"
+    :phone="phone"
+    :zip="zip"
+    :state="state"
+    v-if="edit"
+    @changes-saved="changesSaved"
+  />
 </template>
 
 <script>
+import router from "@/router";
+import editDialog from "../components/editDialog";
+
 import axios from "axios";
 export default {
   data() {
@@ -319,23 +341,54 @@ export default {
       phone: null,
       image: "",
       address: "",
-      city: "GandhiNagar",
-      state: "Gujarat",
-      country: "India",
+      city: "",
+      state: "",
+      country: "",
       zip: null,
       token: localStorage.getItem("token"),
       tokenExpiry: null,
       timeRemaining: null,
       logoutTimer: null,
       showEditDialog: false,
-      pictureUrl : localStorage.getItem('picture')
+      // pictureUrl : localStorage.getItem('picture'),
+      edit: false,
     };
   },
-
-  methods: {},
+  components: {
+    editDialog,
+  },
+  computed: {
+    pictureUrl() {
+      return (
+        localStorage.getItem("picture") ||
+        "https://media.istockphoto.com/id/1460685694/vector/user-profile-icon-in-flat-style-member-avatar-vector-illustration-on-isolated-background.jpg?s=1024x1024&w=is&k=20&c=N7NssS4fxzNDmzQbPFLhR5-YoPtX6elOEJVVjuqUYBE="
+      );
+    },
+  },
+  methods: {
+    logout() {
+      console.log(localStorage.getItem("loggedIn"));
+      localStorage.clear();
+      router.push("/login");
+      this.isLoggedIn = false;
+    },
+    editToggle() {
+      this.edit = !this.edit;
+    },
+    changesSaved(data) {
+      this.name = data.user.name;
+      this.email = data.user.email;
+      this.phone = data.user.phone;
+      this.address = data.user.address;
+      this.state = data.user.state;
+      this.zip = data.user.zip;
+      this.city = data.user.city;
+      this.edit = false;
+    },
+  },
   async mounted() {
     try {
-          console.log(this.pictureUrl)
+      console.log(this.pictureUrl);
       const email = localStorage.getItem("email");
       const token = localStorage.getItem("token");
       const headers = {
@@ -361,6 +414,10 @@ export default {
 </script>
 
 <style scoped>
+.card-body {
+  background-color: #f5f5f5 !important;
+  border-color: #f5f5f5 !important;
+}
 body {
   font-family: Open Sans, sans-serif;
   font-size: 1rem;
@@ -390,7 +447,9 @@ h6 {
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
-
+.text {
+  color: white;
+}
 p {
   margin-top: 0;
   margin-bottom: 1rem;
@@ -447,8 +506,8 @@ a:not([href]):not([tabindex]):focus {
 }
 
 code {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-    monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   font-size: 1em;
 }
 
@@ -925,7 +984,8 @@ textarea.form-control {
 }
 
 .btn:not(:disabled):not(.disabled):active:focus {
-  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08), none;
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08),
+    none;
 }
 
 .btn-primary {
@@ -1059,8 +1119,8 @@ textarea.form-control {
   border-radius: 0.4375rem;
   background-color: #fff;
   background-clip: padding-box;
-  box-shadow: 0 50px 100px rgba(50, 50, 93, 0.1), 0 15px 35px rgba(50, 50, 93, 0.15),
-    0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 50px 100px rgba(50, 50, 93, 0.1),
+    0 15px 35px rgba(50, 50, 93, 0.15), 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-menu.show {
@@ -1211,7 +1271,9 @@ textarea.form-control {
 .input-group > .input-group-prepend:not(:first-child) > .btn,
 .input-group > .input-group-prepend:not(:first-child) > .input-group-text,
 .input-group > .input-group-prepend:first-child > .btn:not(:first-child),
-.input-group > .input-group-prepend:first-child > .input-group-text:not(:first-child) {
+.input-group
+  > .input-group-prepend:first-child
+  > .input-group-text:not(:first-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -1374,7 +1436,7 @@ textarea.form-control {
 }
 
 .bg-secondary {
-  background-color: #f7fafc !important;
+  background-color: #f5f5f5 !important;
 }
 
 a.bg-secondary:hover,
